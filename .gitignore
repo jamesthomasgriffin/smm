@@ -1,0 +1,11 @@
+*__pycache__
+dist/
+SMM.egg-info/
+docs/examples/data/
+.cache/
+*_build/
+*.prof
+*.ipynb_checkpoints/
+
+.coverage
+htmlcov/
