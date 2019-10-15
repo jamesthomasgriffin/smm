@@ -188,8 +188,9 @@ class LinearlyEmbeddedMM(LEMMEstimatesMixin):
 
         if output_weights:
             log_sample_weights = np.zeros((n_samples,))
-            for ix, nlk in zip(indices, -np.log(samples_per_rv)):
-                log_sample_weights[ix] = nlk
+            for ix, k, lp in zip(indices, samples_per_rv, logp):
+                if k > 0:
+                    log_sample_weights[ix] = lp + np.log(n_samples) - np.log(k)
 
         if in_order:
             if output_weights:
@@ -516,17 +517,17 @@ class LinearlyEmbeddedMM(LEMMEstimatesMixin):
 
         return log_PCgX
 
-    def expected_q_values(self, X, TH):
+    def expected_q_values(self, TH, X):
         """
         Calculates the expected values required of the 'E step' in the EM
         algorithm.
 
         Parameters
         ----------
-        X : (N, n) ndarray
-            input data.
         TH : dict
             LEMM parameters.
+        X : (N, n) ndarray
+            input data.
 
         Returns
         -------
@@ -576,7 +577,7 @@ class LinearlyEmbeddedMM(LEMMEstimatesMixin):
         """
 
         # E-step
-        q, qZZ, qZX, qXX = self.expected_q_values(X, TH)
+        q, qZZ, qZX, qXX = self.expected_q_values(TH, X)
 
         # M-step
         newTH = TH.from_minimisation(q, qZZ, qZX, qXX, alpha)

@@ -66,13 +66,17 @@ class BaseSimplexRV(BaseRV):
         """
         return hash((self.m, self.S))
 
-    def __lt__(self, other):
+    def __le__(self, other):
         if not self.m == other.m:
-            return False
-        for a, b in zip(self.degree_sequence, other.degree_sequence):
+            return ValueError("Comparisons only supported between simplices \
+                in same set.")
+        for a, b in zip(other.degree_sequence, self.degree_sequence):
             if b > a:
                 return False
         return True
+
+    def __lt__(self, other):
+        return (self.__le__(other)) and not (self == other)
 
     def __contains__(self, item):
         return item in self.S

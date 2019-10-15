@@ -11,8 +11,19 @@ class TestSimplexRVs:
     def test_UniformSimplexRV(self):
         with pytest.raises(ValueError):
             UniformSimplexRV(4, (0, 4))
+        with pytest.raises(ValueError):
+            UniformSimplexRV(4, (0, 4)) < UniformSimplexRV(5, (0, 4))
+        with pytest.raises(ValueError):
+            UniformSimplexRV(4, (0, 4)) <= UniformSimplexRV(5, (0, 4))
 
         T = UniformSimplexRV(5, (1, 3, 4))
+        U = UniformSimplexRV(5, (1, 4))
+        assert (1 in T) and (4 in T)
+        assert 2 not in T
+        assert not T < T
+        assert T <= T
+        assert U < T
+        assert not T < U
         assert T.k == 2
         assert T.m == 5
         npt.assert_allclose(T.mean, np.array([0, 1, 0, 1, 1])/3)

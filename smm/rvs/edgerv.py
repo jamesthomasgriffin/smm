@@ -89,9 +89,8 @@ class EdgeRV(UniformSimplexRV):
         b : (* shape2, 1) ndarray
             array of linear terms,
             shape2 should be broadcastable with shape1 and shape3.
-        C : (* shape3, 1, 1) ndarray
-            array of quadratic terms,
-            shape3 should be broadcastable with shape1 and shape2.
+        C : (1, 1, 1) ndarray
+            array of quadratic terms.
 
         Returns
         -------
@@ -102,26 +101,39 @@ class EdgeRV(UniformSimplexRV):
         G : (shape, 1, 1) ndarray
             see above
         """
-        σ2 = 1 / c.reshape(c.shape[:-2])  # strip out the two ones
-        σ = np.sqrt(σ2)
-        μ = b.reshape(b.shape[:-1]) * σ2
-        α = -μ / σ
-        β = 1 / σ + α
-        Z = Phi(β) - Phi(α)
-        Zthreshold = 1e-12
-        mask = Z < Zthreshold
-        Z[mask] = Zthreshold
+        cthreshold = 1e-12
+        zthreshold = 1e-12
+        c = c[0, 0, 0]
 
-        non_Z_part = a + μ**2 / (2*σ2) + 1 / 2 * np.log(2*np.pi) + np.log(σ)
-        logE = non_Z_part + np.log(Z)
+        if c > cthreshold:
+            σ2 = 1 / c
+            σ = np.sqrt(σ2)
+            μ = b.reshape(b.shape[:-1]) * σ2
+            α = -μ / σ
+            β = 1 / σ + α
 
-        EU = μ + σ * (phi(α) - phi(β)) / Z
+            Z = Phi(β) - Phi(α)
+            mask = Z < zthreshold  # if σ or |μ| is large
+            Z[mask] = zthreshold
 
-        EUUt = σ2 * (1 + (α*phi(α) - β*phi(β)) / Z) + 2*μ*EU - μ**2
+            non_Z_part = a + μ**2 / (2*σ2) + 1/2 * np.log(2*np.pi) + np.log(σ)
+            logE = non_Z_part + np.log(Z)
 
-        # If Z is small then use endpoints (should find better approximation)
-        EU[mask] = np.clip(μ[mask], 0, 1)
-        EUUt[mask] = EU[mask]
+            EU = μ + σ * (phi(α) - phi(β)) / Z
+
+            EUUt = σ2 * (1 + (α*phi(α) - β*phi(β)) / Z) + 2*μ*EU - μ**2
+
+            # If Z is small then use endpoints
+            # (should find better approximation)
+            EU[mask] = np.clip(μ[mask], 0, 1)
+            EUUt[mask] = EU[mask]
+        else:
+            # We make the assumption that c can only be close to zero
+            # if the unit interval is embedded at a single point, in
+            # which case b is also zero.
+            logE = a
+            EU = np.zeros_like(a) + 0.5  # mean of uniform dist
+            EUUt = np.zeros_like(a) + 1/3  # EU2 for uniform dist
 
         return logE, EU[:, None], EUUt[:, None, None]
 

@@ -117,7 +117,7 @@ class PointRV(BaseRV):
         invsqrtS, logdetS = invsqrtS_logdetS_from_S(S, n)
 
         if len(np.shape(S)) == 2:
-            Y = (X - VZ[None, :]).dot(invsqrtS)
+            Y = (X - VZ[None, :]).dot(invsqrtS.T)
         else:
             Y = (X - VZ[None, :]) * invsqrtS
 
@@ -152,8 +152,8 @@ class PointRV(BaseRV):
         """
         weighted_X = weights.dot(X)
         total_weight = weights.sum()
-        return self.Z[:, None] * weighted_X[None, :], \
-            (total_weight * self.Z)[:, None] * self.Z[None, :]
+        return (total_weight * self.Z)[:, None] * self.Z[None, :], \
+               self.Z[:, None] * weighted_X[None, :]
 
     def mean_given_X(self):
         """

@@ -87,8 +87,6 @@ class TestLEMM:
                     last_stop = indices[i].stop
                 assert last_stop == n_samples
 
-                npt.assert_allclose(np.exp(log_sw).sum(), 2)
-
                 # Check sampling - unordered case
                 n_samples = 20
                 Y, C_sample, log_sw = samp_fn(pm, n_samples, in_order=False,
@@ -101,14 +99,11 @@ class TestLEMM:
                 for c in C_sample:
                     assert c in range(L.M)
 
-                npt.assert_allclose(np.exp(log_sw).sum(), 2)
-
             # Check sampling - ordered case
             n_samples = 20
             indices, log_sw = L.C_sample(TH.logp, n_samples, in_order=True,
                                          output_weights=True)
             assert log_sw.shape == (n_samples,)
-            npt.assert_allclose(np.exp(log_sw).sum(), 2)
 
             # Check that the indices all make sense
             assert len(indices) == L.M
@@ -126,7 +121,6 @@ class TestLEMM:
                                           in_order=False, output_weights=True)
             assert C_sample.shape == (n_samples,)
             assert log_sw.shape == (n_samples,)
-            npt.assert_allclose(np.exp(log_sw).sum(), 2)
 
             assert C_sample.dtype == np.int
             for c in C_sample:

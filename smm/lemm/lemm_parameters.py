@@ -327,10 +327,11 @@ class GLEMM_Parameters_Untied(GLEMM_Parameters):
         weight = np.sum(q)
         for Q in [qZX, qZZ, qXX]:
             Q /= weight
+        norm_q = q / weight
 
         new_V = self.V
         for _ in range(self.untied_minimisation_iterations):
-            new_covar = self._untied_cv_from_V(new_V, q, qZZ, qZX, qXX)
+            new_covar = self._untied_cv_from_V(new_V, norm_q, qZZ, qZX, qXX)
             new_V = self._V_from_untied_cv(new_covar, qZZ, qZX)
 
         cls = self.__class__
@@ -344,16 +345,19 @@ class GLEMM_Parameters_Untied(GLEMM_Parameters):
     def _untied_cv_from_V(self, V, q, qZZ, qZX, qXX):
         n = qZX.shape[2]
         qVZZV = qZZ.dot(V).swapaxes(1, 2).dot(V)
-        qVZX = qZX.swapaxes(1, 2).dot(V)
-        cv = (qVZZV + qXX - qVZX - qVZX.swapaxes(1, 2))
+        qXZV = qZX.swapaxes(1, 2).dot(V)
+        cv = (qVZZV + qXX - qXZV - qXZV.swapaxes(1, 2))
 
+        # If the probability is too small we get numerical issues when
+        # computing cv / q
         prob_cases = q < 1e-20
         cv[prob_cases] = np.eye(n)[None, :, :]
         modified_q = q.copy()
         modified_q[prob_cases] = 1.
         cv /= modified_q[:, None, None]
 
-        # S += 1e-10 * np.eye(n)[None,:,:]
+        # NB in these cases our computation has been very inefficient
+        # TODO recode these cases
         if self.covar_type == 'spherical':
             cv = cv.trace(axis1=1, axis2=2) / n
         if self.covar_type == 'diagonal':

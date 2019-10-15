@@ -1,6 +1,5 @@
 from smm.lemm.linearlyembeddedmm import LinearlyEmbeddedMM
 from smm.rvs.edgerv import EdgeRV
-from smm.rvs.pointrv import PointRV
 from smm.rvs.basesimplexrv import k_dim_degenerate_l_simplices
 
 
@@ -23,10 +22,11 @@ class GraphMM(LinearlyEmbeddedMM):
 
     def __init__(self, m, n, include_nodes=False, **kw_args):
 
-        edges = k_dim_degenerate_l_simplices(1, [1], m)
-        rvs = [EdgeRV(m, S) for S in edges]
-
         if include_nodes:
-            rvs = rvs + [PointRV(m, v) for v in range(m)]
+            support_dims = [0, 1]
+        else:
+            support_dims = [1]
+        edges = k_dim_degenerate_l_simplices(1, support_dims, m)
+        rvs = [EdgeRV(m, S) for S in edges]
 
         LinearlyEmbeddedMM.__init__(self, m, n, rvs, **kw_args)

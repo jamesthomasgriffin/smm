@@ -235,7 +235,7 @@ class LEMMEstimatesMixin:
                                           at_least=0, output_weights=True)
 
         log_PXnVZnC = self.log_X_and_VZ_and_C(X, VZ, indices, TH, log_PZ)
-        log_PX = logsumexp(log_PXnVZnC, axis=1)
+        log_PX = logsumexp(log_PXnVZnC, axis=1) - np.log(log_PXnVZnC.shape[1])
 
         return log_PX
 
