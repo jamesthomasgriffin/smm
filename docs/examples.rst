@@ -1,7 +1,4 @@
 Examples
 ========
 
-TODO
-
-.. toctree::
-    :maxdepth: 2
+See the notebooks in the docs/examples/ folder.
