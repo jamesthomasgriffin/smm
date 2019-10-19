@@ -8,7 +8,7 @@ SimplicialMM
 
 .. autoclass:: smm.lemm.SimplicialMM
    :members:
-   
+
 GraphMM
 ------------
 
@@ -25,4 +25,16 @@ The following class is a mixin class, so the methods are available in the
 LinearlyEmbeddedMM class.
 
 .. autoclass:: smm.lemm.linearlyembeddedmm.LEMMEstimatesMixin
+   :members:
+
+MPPCA
+-----
+
+.. autoclass:: smm.lemm.MPPCA
+   :members:
+
+GMM
+---
+
+.. autoclass:: smm.lemm.GMM
    :members:

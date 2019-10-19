@@ -7,6 +7,7 @@ class GraphMM(LinearlyEmbeddedMM):
     """
     A class for a simplicial mixture model with only 0- and 1-simplices, i.e.
     only points and lines.
+    This class allows for the use of the exact EM algorithm.
 
     Parameters
     ----------

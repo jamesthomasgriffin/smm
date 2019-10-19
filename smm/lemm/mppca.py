@@ -6,7 +6,10 @@ import numpy as np
 class MPPCA(LinearlyEmbeddedMM):
     """
     A class implementing mixtures of PPCA, described in
-    ...
+
+        Michael E. Tipping and Christopher M. Bishop,
+        *Mixtures of Probabilistic Principal Component Analysers*,
+        Neural Computation 11(2), pp 443–482, MIT Press, 1999
 
     Parameters
     ----------

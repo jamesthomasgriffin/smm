@@ -1,8 +1,8 @@
 What is a Simplicial Mixture Model?
 ===================================
 
-Main Points
------------
+Introduction
+------------
 
 * A simplicial mixture model is a probability distribution defined on a Euclidean
   space by a mixture of simplices.
@@ -80,9 +80,17 @@ The process of fitting a model to a digit is a form of vectorisation, a raster
 image can be interpreted as a histogram of a random variable, then fitting a
 model gives vector information representing this random variable.
 
+---------------------------------------------------------------------
 
 Theoretical Details
 -------------------
+
+For full details see the preprint
+
+    James T. Griffin,
+    *Probabilistic Fitting of Topological Structure to Data*,
+    `arXiv:1909.10047 <https://arxiv.org/abs/1909.10047>`_
+
 
 Reminder - Gaussian Mixture Models
 ++++++++++++++++++++++++++++++++++
@@ -93,7 +101,7 @@ set of parameters the resulting SMM is just a GMM, however the essential idea
 behind SMMs is a little different.
 
 A GMM defines a random variable, perhaps multivariate.
-We will fix a dimension, n, describing the ambient dimension, and an integer, m,
+We will fix a dimension, n describing the ambient dimension, and an integer, m
 describing the number of components of the model.
 One then needs a choice of parameters
 
@@ -129,7 +137,7 @@ where N is the number of points in the data set X and :math:`P(x_i \mid \Theta)`
 is the probability of obtaining the point :math:`x_i` given the set of
 parameters :math:`\Theta`.
 
-In practice this minimisation problem is too difficult to solve directly
+In practice this maximisation problem is too difficult to solve directly
 and instead an iterative approach, the *EM algorithm* is used.
 More on that later.
 
@@ -204,8 +212,9 @@ distributions on the original simplex.
 i.e. choose a point uniformly from the degenerate simplex and then map it
 down to the original simplex.
 These distributions are
-[Dirichlet distributions](https://en.wikipedia.org/Dirichlet distribution)
+`Dirichlet distributions <https://en.wikipedia.org/Dirichlet_distribution>`_
 with integer parameters.
+
 
 Simplicial Mixture Models
 +++++++++++++++++++++++++
