@@ -13,15 +13,15 @@ class TestMCMC:
         for RV in [UniformSimplexRV, NormalSimplexRV]:
             S = 0.1
             self.MCMC_Integrator_RV(RV, 'spherical', S)
-            self.MCMC_Integrator_RV(RV, 'spherical', S, tied=False)
+            # self.MCMC_Integrator_RV(RV, 'spherical', S, tied=False)
 
             S = np.array([0.1, 0.2])
             self.MCMC_Integrator_RV(RV, 'diagonal', S)
-            self.MCMC_Integrator_RV(RV, 'diagonal', S, tied=False)
+            # self.MCMC_Integrator_RV(RV, 'diagonal', S, tied=False)
 
             S = np.array([[0.2, 0.1], [0.1, 0.2]])
             self.MCMC_Integrator_RV(RV, 'full', S)
-            self.MCMC_Integrator_RV(RV, 'full', S, tied=False)
+            # self.MCMC_Integrator_RV(RV, 'full', S, tied=False)
 
     # @pytest.mark.filterwarnings("ignore:importing the ABCs from")
     def MCMC_Integrator_RV(self, RV, covar_type, covar, tied=True):
