@@ -43,20 +43,24 @@ class Test_Parameters:
         for cv_type, covar in covars:
             GLEMM_Parameters(V, M, None, cv_type, covar)
 
+        X = np.random.randn(20, n)
         TH = GLEMM_Parameters(V, M, None, 'spherical', 1.0)
         TH.relax_type('diagonal')
         assert TH.covar_type == 'diagonal'
         assert TH.cv_chol.shape == (n,)
+        assert TH.calc_XX(X).shape == (n,)
 
         TH.relax_type('full')
         assert TH.covar_type == 'full'
         assert TH.cv_invchol.shape == (n, n)
+        assert TH.calc_XX(X).shape == (n, n)
 
         TH.restrict_type('diagonal')
         assert TH.covar_type == 'diagonal'
 
         TH.restrict_type('spherical')
         assert TH.covar_type == 'spherical'
+        assert np.shape(TH.calc_XX(X)) == ()
 
         TH.relax_type('full')
         TH.restrict_type('spherical')

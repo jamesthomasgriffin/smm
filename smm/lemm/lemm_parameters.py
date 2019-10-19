@@ -208,6 +208,30 @@ class GLEMM_Parameters(LEMM_Parameters):
         self.set_Gaussian_terms(new_type, new_covar)
         return self
 
+    def calc_XX(self, X):
+        """
+        For a given data set X, calculated the sum of "X squared" terms.
+        The shape of this depends on the covariance type, which is why it is
+        calculated by this class.
+
+        Parameters
+        ----------
+            X - (N, n) ndarray
+                dataset
+
+        Returns
+        -------
+            XX - {(n, n) ndarray, (n,) ndarray, float}
+                squared terms
+        """
+        if self.covar_type == 'spherical':
+            return np.square(X).mean()
+        if self.covar_type == 'diagonal':
+            return np.square(X).mean(axis=0)
+        if self.covar_type == 'full':
+            N = X.shape[0]
+            return X.T.dot(X) / N
+
     def from_minimisation(self, q, qZZ, qZX, qXX, alpha=None):
         """
         Find the parameters which minimize the quantity Q defined by q, qZZ,
@@ -223,8 +247,9 @@ class GLEMM_Parameters(LEMM_Parameters):
             qXX = qXX.sum(axis=0)
 
         weight = np.sum(q)
-        for Q in [qZX, qZZ, qXX]:
-            Q /= weight
+        ZZ = qZZ / weight
+        ZX = qZX / weight
+        XX = qXX / weight
 
         # if self.using_V_regularisation:
         #     if np.shape(self.V_invcov) == ():
@@ -240,16 +265,21 @@ class GLEMM_Parameters(LEMM_Parameters):
         # else:
         #     newV = np.linalg.lstsq(qZZ, qZX, rcond=None)[0]
 
-        new_V = np.linalg.lstsq(qZZ, qZX, rcond=None)[0]
-
-        qVZZV = qZZ.dot(new_V).T.dot(new_V)
-        qVZX = new_V.T.dot(qZX)
-        new_covar = (qVZZV + qXX - qVZX - qVZX.T)
+        new_V = np.linalg.lstsq(ZZ, ZX, rcond=None)[0]
 
         if self.covar_type == 'spherical':
-            new_covar = new_covar.trace() / self.n
+            VVt = new_V.dot(new_V.T)
+            VZZV = VVt.reshape(self.m**2).dot(ZZ.reshape(self.m**2))
+            VZX = new_V.reshape(self.m*self.n).dot(ZX.reshape(self.m*self.n))
+            new_covar = (VZZV - 2*VZX) / self.n + XX
         if self.covar_type == 'diagonal':
-            new_covar = new_covar.diagonal()
+            VZZV = np.einsum("ik,ij,jk->k", new_V, ZZ, new_V)
+            VZX = np.einsum("ik,ik->k", new_V, ZX)
+            new_covar = (VZZV + XX - 2*VZX)
+        if self.covar_type == 'full':
+            VZZV = ZZ.dot(new_V).T.dot(new_V)
+            VZX = new_V.T.dot(ZX)
+            new_covar = (VZZV + XX - VZX - VZX.T)
 
         cls = self.__class__
         if alpha is None:

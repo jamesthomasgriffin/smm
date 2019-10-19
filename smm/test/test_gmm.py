@@ -16,9 +16,9 @@ class TestGMM:
 
         means = np.array([[0, 1], [1, 0], [1, 1]])
         TH = GLEMM_Parameters(means, L.M, None, 'spherical', 0.1)
-        THuntied = GLEMM_Parameters_Untied(means, L.M,
-                                        covar_type='diagonal',
-                                        covar=np.zeros((L.M, L.n))+0.1)
+        GLEMM_Parameters_Untied(means, L.M,
+                                covar_type='diagonal',
+                                covar=np.zeros((L.M, L.n))+0.1)
 
         L.mean_and_covar(TH)
 

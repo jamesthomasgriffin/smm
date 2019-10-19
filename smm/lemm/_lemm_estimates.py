@@ -381,7 +381,8 @@ class LEMMEstimatesMixin:
             qZZ = np.zeros((self.M, self.m, self.m))
             qZX = np.zeros((self.M, self.m, self.n))
             if TH.tied:
-                qXX = X.T.dot(X)
+                # qXX = X.T.dot(X)
+                qXX = TH.calc_XX(X)
             else:
                 qXX = np.zeros((self.M, self.n, self.n))
             p_per_Z = np.exp(logp_per_Z)
@@ -403,7 +404,7 @@ class LEMMEstimatesMixin:
 
                 if not TH.tied:
                     p_XgC = np.sum(p_ZgX[:, ix], axis=1)
-                    qXX[i] = (p_XgC[:, None]*X).T.dot(X)
+                    qXX[i] = (p_XgC[:, None]*X).T.dot(X) / N
 
             return logq, qZZ, qZX, qXX
 
@@ -425,7 +426,7 @@ class LEMMEstimatesMixin:
             qZX += c
             qXX += d
 
-        return np.exp(logq), qZZ, qZX, qXX
+        return np.exp(logq)/N, qZZ/N, qZX/N, qXX
 
     def stochastic_step(self, TH, X, n_samples=1000, batch_size=2000):
         """

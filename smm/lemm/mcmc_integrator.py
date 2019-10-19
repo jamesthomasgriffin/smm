@@ -166,9 +166,13 @@ class MCMC_Integrator:
         self.exp_values = EstimatedValuesAccumulator()
 
         # A term in the minimisation which never changes
-        self.qXX = X.T.dot(X) / self.N
+        self.qXX = self.TH.calc_XX(X)
 
         self.alpha = alpha
+
+        if not self.TH.tied:
+            raise NotImplementedError(
+                "Untied covariances not yet fully implemented")
 
     def Z(self):
         r"""
@@ -252,8 +256,8 @@ class MCMC_Integrator:
                 diff = diff.dot(self.TH.cv_invchol)
                 summed = summed.dot(self.TH.cv_invchol)
             else:
-                diff = diff * self.TH.cv_invchol
-                summed = summed * self.TH.cv_invchol
+                diff *= self.TH.cv_invchol
+                summed *= self.TH.cv_invchol
         else:
             if self.TH.covar_type == 'full':
                 trans_diff = np.zeros_like(diff)
@@ -271,6 +275,8 @@ class MCMC_Integrator:
                 diff = diff * self.TH.cv_invchol[self.C, None]
                 summed = summed * self.TH.cv_invchol[self.C, None]
 
+        #  Note, if the covariances are different, then there's a logdet term
+        #  that we have not implemented. TODO
         log_ratio = -1/2 * np.einsum("Nn,Nn->N", diff, summed)
         if C_ratio is not None:
             log_ratio += C_ratio

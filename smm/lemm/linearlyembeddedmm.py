@@ -534,7 +534,8 @@ class LinearlyEmbeddedMM(LEMMEstimatesMixin):
         q : (M,) ndarray
         qZZ : (M, m, m) ndarray
         qZX : (M, m, n) ndarray
-        qXX : (n, n) ndarray if tied, otherwise (M,n,n) ndarray
+        qXX : {ndarray, float}
+            the shape depends on TH
         """
 
         log_PCgX = self.log_prob_C_given_X(TH, X)
@@ -548,12 +549,13 @@ class LinearlyEmbeddedMM(LEMMEstimatesMixin):
         for i, rv in enumerate(self.rvs):
             qZZ[i], qZX[i] = rv.moments_marg_over_X(PCgX[i], X)
 
+        N = X.shape[0]
         if TH.tied:
-            qXX = X.T.dot(X)
+            qXX = TH.calc_XX(X)
         else:
-            qXX = X.T.dot((PCgX[:, :, None] * X)).swapaxes(0, 1)
+            qXX = X.T.dot((PCgX[:, :, None] * X)).swapaxes(0, 1) / N
 
-        return np.exp(logq), qZZ, qZX, qXX
+        return np.exp(logq)/N, qZZ/N, qZX/N, qXX
 
     def step(self, TH, X, alpha=None):
         """

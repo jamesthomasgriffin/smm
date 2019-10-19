@@ -1,11 +1,13 @@
 from smm.lemm.linearlyembeddedmm import LinearlyEmbeddedMM
 from smm.rvs.pointrv import PointRV
-import numpy as np
 
 
 class GMM(LinearlyEmbeddedMM):
     """
-    A class implementing Gaussian mixture models.
+    A class implementing Gaussian mixture models.  Note that this is not an
+    efficient implementation; the formulae for solving the maximisation problem
+    are much simpler in the GMM case and this code does not take advantage of
+    that.
 
     Parameters
     ----------
