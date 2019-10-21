@@ -6,7 +6,7 @@ There are 4 types of classes used in the module smm.
 Model and Parameters
 --------------------
 
-The two classes defining a model are
+The two classes defining a model are 
 
 * a *mixture model* class, typically derived from :ref:`LinearlyEmbeddedMM`, but you
   are likely to want to use :ref:`SimplicialMM` or :ref:`GraphMM`.  This class holds a list

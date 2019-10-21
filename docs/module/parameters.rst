@@ -5,16 +5,18 @@ smm.lemm.GLEMM_Parameters
 
 .. _GLEMM_Parameters:
 
-The main parameter class
-------------------------
+GLEMM_Parameters
+----------------
+
+The main parameter class.
 
 .. autoclass:: smm.lemm.GLEMM_Parameters
    :members:
 
 .. _GLEMM_Parameters_Untied:
 
-The untied case
----------------
+GLEMM_Parameters_Untied
+-----------------------
 
 This allows for different covariance matrices for each mixture component.
 

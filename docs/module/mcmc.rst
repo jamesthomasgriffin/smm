@@ -5,8 +5,8 @@ smm.lemm.MCMC_Integrator
 
 .. _MCMC_Integrator:
 
-The MCMC sampler
-----------------
+MCMC_Integrator
+---------------
 
 .. autoclass:: smm.lemm.MCMC_Integrator
    :members:
