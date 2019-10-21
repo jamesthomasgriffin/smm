@@ -3,6 +3,8 @@ smm.lemm.MCMC_Integrator
 
 .. contents::
 
+.. _MCMC_Integrator:
+
 The MCMC sampler
 ----------------
 

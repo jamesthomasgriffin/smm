@@ -5,5 +5,6 @@ Guide to the `smm` module
    :maxdepth: 3
 
    lemm.rst
+   parameters.rst
    mcmc.rst
    rvs.rst

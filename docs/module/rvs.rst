@@ -11,6 +11,8 @@ The most general is the uniform simplex, however this can not be used for the EM
 The EdgeRV implements an equivalent distribution to a 1-dimensional UniformSimplexRV, but can be used in the EM algorithm.
 The NormalSimplexRV class implements a Gaussian approximation to the distribution used in UniformSimplexRV, which can be used in the EM algorithm.
 
+.. _UniformSimplexRV:
+
 UniformSimplexRV
 ++++++++++++++++
 
@@ -28,7 +30,7 @@ EdgeRV
 
 .. autoclass:: smm.rvs.EdgeRV
     :members:
-    
+
 Base Classes
 ------------
 

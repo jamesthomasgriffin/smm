@@ -1,4 +1,4 @@
 Examples
 ========
 
-See the notebooks in the docs/examples/ folder.
+See the notebooks in the smm/examples/ folder.

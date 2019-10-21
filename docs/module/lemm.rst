@@ -3,17 +3,23 @@ smm.lemm - Mixture Models
 
 .. contents::
 
+.. _SimplicialMM:
+
 SimplicialMM
 ------------
 
 .. autoclass:: smm.lemm.SimplicialMM
    :members:
 
+.. _GraphMM:
+
 GraphMM
 ------------
 
 .. autoclass:: smm.lemm.GraphMM
    :members:
+
+.. _LinearlyEmbeddedMM:
 
 LinearlyEmbeddedMM
 ------------------
@@ -27,11 +33,15 @@ LinearlyEmbeddedMM class.
 .. autoclass:: smm.lemm.linearlyembeddedmm.LEMMEstimatesMixin
    :members:
 
+.. _MPPCA:
+
 MPPCA
 -----
 
 .. autoclass:: smm.lemm.MPPCA
    :members:
+
+.. _GMM:
 
 GMM
 ---

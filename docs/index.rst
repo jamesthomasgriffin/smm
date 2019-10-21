@@ -10,6 +10,7 @@ Contents:
     :maxdepth: 3
 
     installation
+    layout
     guide
     examples
     module/index
